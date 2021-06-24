@@ -292,7 +292,7 @@ void CompactionIterator::InvokeFilterIfNeeded(bool* need_skip,
     };
     auto sample = filter_sample_interval_;
     if (env_ && sample && (filter_hit_count_ & (sample - 1)) == 0) {
-      StopWatchNano timer(env_, true);
+      StopWatchNano timer(env_->GetSystemClock(), true);
       doFilter();
       iter_stats_.total_filter_time += timer.ElapsedNanos() * sample;
     } else {

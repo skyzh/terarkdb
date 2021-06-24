@@ -98,7 +98,7 @@ IOStatus EncryptedSequentialFile::Read(size_t n, const IOOptions& options,
     return io_s;
   }
   {
-    PERF_TIMER_GUARD(decrypt_data_nanos);
+    //PERF_TIMER_GUARD(encrypt_data_nanos);;
     io_s = status_to_io_status(
         stream_->Decrypt(offset_, (char*)result->data(), result->size()));
   }
@@ -159,7 +159,7 @@ IOStatus EncryptedSequentialFile::PositionedRead(uint64_t offset, size_t n,
   }
   offset_ = offset + result->size();
   {
-    PERF_TIMER_GUARD(decrypt_data_nanos);
+    //PERF_TIMER_GUARD(encrypt_data_nanos);;
     io_s = status_to_io_status(
         stream_->Decrypt(offset, (char*)result->data(), result->size()));
   }
@@ -187,7 +187,7 @@ IOStatus EncryptedRandomAccessFile::Read(uint64_t offset, size_t n,
     return io_s;
   }
   {
-    PERF_TIMER_GUARD(decrypt_data_nanos);
+    //PERF_TIMER_GUARD(encrypt_data_nanos);;
     io_s = status_to_io_status(
         stream_->Decrypt(offset, (char*)result->data(), result->size()));
   }
@@ -264,7 +264,7 @@ IOStatus EncryptedWritableFile::Append(const Slice& data,
     buf.Size(data.size());
     IOStatus io_s;
     {
-      PERF_TIMER_GUARD(encrypt_data_nanos);
+      //PERF_TIMER_GUARD(encrypt_data_nanos);
       io_s = status_to_io_status(
           stream_->Encrypt(offset, buf.BufferStart(), buf.CurrentSize()));
     }
@@ -291,7 +291,7 @@ IOStatus EncryptedWritableFile::PositionedAppend(const Slice& data,
     buf.Size(data.size());
     IOStatus io_s;
     {
-      PERF_TIMER_GUARD(encrypt_data_nanos);
+      //PERF_TIMER_GUARD(encrypt_data_nanos);
       io_s = status_to_io_status(
           stream_->Encrypt(offset, buf.BufferStart(), buf.CurrentSize()));
     }
@@ -416,7 +416,7 @@ IOStatus EncryptedRandomRWFile::Write(uint64_t offset, const Slice& data,
     buf.Size(data.size());
     IOStatus io_s;
     {
-      PERF_TIMER_GUARD(encrypt_data_nanos);
+      //PERF_TIMER_GUARD(encrypt_data_nanos);
       io_s = status_to_io_status(
           stream_->Encrypt(offset, buf.BufferStart(), buf.CurrentSize()));
     }
@@ -441,7 +441,7 @@ IOStatus EncryptedRandomRWFile::Read(uint64_t offset, size_t n,
     return status;
   }
   {
-    PERF_TIMER_GUARD(decrypt_data_nanos);
+    //PERF_TIMER_GUARD(encrypt_data_nanos);;
     status = status_to_io_status(
         stream_->Decrypt(offset, (char*)result->data(), result->size()));
   }
@@ -1174,7 +1174,7 @@ Status CTREncryptionProvider::CreateNewPrefix(const std::string& /*fname*/,
   CTRCipherStream cipherStream(cipher_, prefixIV.data(), initialCounter);
   Status status;
   {
-    PERF_TIMER_GUARD(encrypt_data_nanos);
+    //PERF_TIMER_GUARD(encrypt_data_nanos);
     status = cipherStream.Encrypt(0, prefix + (2 * blockSize),
                                   prefixLength - (2 * blockSize));
   }
@@ -1219,7 +1219,7 @@ Status CTREncryptionProvider::CreateCipherStream(
   CTRCipherStream cipherStream(cipher_, iv.data(), initialCounter);
   Status status;
   {
-    PERF_TIMER_GUARD(decrypt_data_nanos);
+    //PERF_TIMER_GUARD(encrypt_data_nanos);;
     status = cipherStream.Decrypt(0, (char*)prefix.data() + (2 * blockSize),
                                   prefix.size() - (2 * blockSize));
   }

@@ -562,7 +562,7 @@ FragmentedRangeTombstoneIterator* MemTable::NewRangeTombstoneIterator(
     if (unfragmented_iter == nullptr) {
       return nullptr;
     }
-    StopWatchNano timer(env_, true);
+    StopWatchNano timer(env_->GetSystemClock(), true);
     fragmented_tombstone_list = std::make_shared<FragmentedRangeTombstoneList>(
         std::unique_ptr<InternalIteratorBase<Slice>>(unfragmented_iter),
         comparator_.comparator, false /* for_compaction */,
